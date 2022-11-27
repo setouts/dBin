@@ -1,0 +1,5 @@
+service : {
+    "Greet": (text) -> (text) query;
+    "UpdateGlobalGreeting": (text) -> ();
+    "UpdatePrivateGreeting": (text) -> ();
+}

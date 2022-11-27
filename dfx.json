@@ -1,0 +1,24 @@
+{
+    "canisters": {
+        "pastebin_test_backend": {
+            "candid": "src/pastebin_test_backend/pastebin_test_backend.did",
+            "package": "pastebin_test_backend",
+            "type": "rust"
+        },
+        "pastebin_test_frontend": {
+            "dependencies": ["pastebin_test_backend"],
+            "frontend": {
+                "entrypoint": "src/pastebin_test_frontend/src/index.html"
+            },
+            "source": ["dist/", "src/pastebin_test_frontend/assets"],
+            "type": "assets"
+        }
+    },
+    "defaults": {
+        "build": {
+            "args": "",
+            "packtool": ""
+        }
+    },
+    "version": 1
+}

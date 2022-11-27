@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Pastebin</title>
+    </head>
+    <body>
+        <div id="app"></div>
+
+        <link rel="stylesheet" href="../assets/style.scss" />
+        <!-- <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css"
+        /> -->
+        <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script> -->
+        <!-- <script>
+            let typing_area = document.getElementById("typing_area");
+            let upload_btn = document.getElementById("upload_button");
+
+            upload_btn.addEventListener("click", () => {
+                if (!!typing_area.value.trim()) {
+                    fetch("/paste", {
+                        method: "post",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            contents: typing_area.value,
+                        }),
+                    })
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((data) => {
+                            console.log(data);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                }
+            });
+
+            // hljs.highlightElement(typing_area);
+
+            typing_area.select();
+        </script> -->
+
+        <script type="module" src="Main.tsx"></script>
+        <!-- <script>
+            Main.run();
+        </script> -->
+    </body>
+</html>

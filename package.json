@@ -1,0 +1,53 @@
+{
+    "name": "pastebin_test_frontend",
+    "version": "0.1.0",
+    "scripts": {
+        "build": "npx parcel build src/pastebin_test_frontend/src/index.html",
+        "prebuild": "npm run generate",
+        "dev": "npx parcel serve src/pastebin_test_frontend/src/index.html",
+        "predev": "dfx start --background --clean; dfx deploy pastebin; node setupEnv.js; npm run generate;",
+        "postdev": "dfx stop",
+        "generate": "dfx generate"
+    },
+    "dependencies": {
+        "inferno": "^8.0.4",
+        "node-gyp-build": "^4.5.0",
+        "web3.storage": "^4.4.0"
+    },
+    "devDependencies": {
+        "@dfinity/agent": "0.14.1",
+        "@dfinity/candid": "0.14.1",
+        "@dfinity/principal": "0.14.1",
+        "@parcel/transformer-sass": "^2.8.0",
+        "@parcel/transformer-typescript-tsc": "^2.8.0",
+        "@typescript-eslint/eslint-plugin": "^5.44.0",
+        "@typescript-eslint/parser": "^5.44.0",
+        "assert": "2.0.0",
+        "buffer": "6.0.3",
+        "eslint": "8.26.0",
+        "eslint-plugin-inferno": "^7.31.8",
+        "eslint-plugin-only-warn": "^1.0.3",
+        "events": "3.3.0",
+        "inferno-devtools": "^7.4.11",
+        "inferno-hyperscript": "^8.0.4",
+        "parcel": "2.8.0",
+        "process": "0.11.10",
+        "rimraf": "^3.0.2",
+        "stream-browserify": "3.0.0",
+        "typescript": "^4.8.4",
+        "util": "0.12.4"
+    },
+    "engines": {
+        "node": "^12 || ^14 || ^16 || ^18"
+    },
+    "browserslist": [
+        "last 2 chrome version",
+        "last 2 firefox version",
+        "last 2 safari version",
+        "last 2 edge version"
+    ],
+    "alias": {
+        "inferno": "/node_modules/inferno/dist/index.dev.esm.js",
+        "web3.storage": "web3.storage/dist/bundle.esm.min.js"
+    }
+}

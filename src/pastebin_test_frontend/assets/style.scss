@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    background-color: rgb(18, 18, 18);
+    padding: 0;
+    overflow: hidden
+}
+
+#app {
+    width: 100vw;
+    height: calc(100vh - 3em);
+}
+
+#typing_area {
+    width: calc(100% - 50px);
+    margin-left: 50px;
+    background-color: transparent !important;
+    padding: 0;
+    color: white;
+    outline: none !important;
+    border: none !important;
+    border-color: transparent;
+    height: 100%;
+}
+
+#upload_button {
+    width: 50px;
+    height: 50px;
+}
+
+#nav {
+    background-color: rgb(26, 26, 37);
+    height: 3em;
+    width: 100%;
+
+}
