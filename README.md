@@ -1,2 +1,2 @@
 # dBin
-Distributed Pastebin
+Distributed Pastebin hosted on IC.
