@@ -20,6 +20,6 @@
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true
     },
-    "include": ["src/pastebin_test_frontend/src/**/*"],
+    "include": ["src/dBin_frontend/src/**/*"],
     "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }
