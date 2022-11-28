@@ -1,16 +1,16 @@
 {
     "canisters": {
-        "pastebin_test_backend": {
-            "candid": "src/pastebin_test_backend/pastebin_test_backend.did",
-            "package": "pastebin_test_backend",
+        "dBin_backend": {
+            "candid": "src/dBin_backend/dBin_backend.did",
+            "package": "dBin_backend",
             "type": "rust"
         },
-        "pastebin_test_frontend": {
-            "dependencies": ["pastebin_test_backend"],
+        "dBin_frontend": {
+            "dependencies": ["dBin_backend"],
             "frontend": {
-                "entrypoint": "src/pastebin_test_frontend/src/index.html"
+                "entrypoint": "src/dBin_frontend/src/index.html"
             },
-            "source": ["dist/", "src/pastebin_test_frontend/assets"],
+            "source": ["dist/", "src/dBin_frontend/assets"],
             "type": "assets"
         }
     },
