@@ -27,3 +27,4 @@ src/dBin_frontend/assets/config.json
 
 *.env.*
 canister_ids.json
+parcel.pem
