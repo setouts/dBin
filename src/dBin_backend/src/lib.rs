@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 
 use candid::Principal;
-use ic_cdk_macros::{query, update};
+use ic_cdk_macros::{init, query, update};
 use std::collections::HashMap;
 
 thread_local! {
@@ -9,7 +9,10 @@ thread_local! {
     static PRIVATE_GREETINGS: RefCell<HashMap<Principal,String>> = RefCell::default();
 }
 
-//TODO: Do better
+#[init]
+fn init() {
+    ic_cdk::api::print("hi");
+}
 
 #[query(name = "Greet")]
 fn greet(name: String) -> String {

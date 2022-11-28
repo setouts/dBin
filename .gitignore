@@ -24,3 +24,5 @@ node_modules/
 dist/
 
 src/dBin_frontend/assets/config.json
+
+*.env.*

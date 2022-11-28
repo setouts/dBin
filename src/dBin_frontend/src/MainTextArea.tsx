@@ -43,13 +43,15 @@ export class MainTextArea extends Component<TextAreaProps, TextAreaState> {
             console.log("bruh");
 
             if (underlying_files.length > 0) {
-                this.setState({ value: await underlying_files[0].text() });
+                //this.setState({ value: await underlying_files[0].text() });
+                this.setState({ value: "tedddsdt" });
             }
         }
     }
 
     //TODO: Figure out if this is the best way to do this. Seems slow? as it forces a state merge.
     public onInput(event: FormEvent<HTMLTextAreaElement>) {
+        console.log("this werk?");
         this.setState({
             value: event.currentTarget.value,
         });

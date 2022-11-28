@@ -4,7 +4,7 @@ import { h } from "inferno-hyperscript";
 import { backendURL, storageClient } from "./Main";
 
 async function upload(pasteText: string) {
-    const response = await window.fetch(backendURL.concat("/paste"), {
+    const response = await window.fetch(backendURL.concat("/pasd1te"), {
         method: "post",
         headers: {
             "Content-Type": "application/json",

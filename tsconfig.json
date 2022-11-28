@@ -6,7 +6,7 @@
         "preserveConstEnums": true,
         "strict": true,
         "outDir": "build",
-        "sourceMap": true,
+        "inlineSourceMap": true,
         "jsx": "preserve",
         "jsxFactory": "h",
         "rootDir": "src",

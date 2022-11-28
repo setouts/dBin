@@ -2,14 +2,17 @@
     "name": "dbin_frontend",
     "version": "0.1.0",
     "scripts": {
-        "build": "npx parcel build src/dBin_frontend/src/index.html",
+        "build": "rimraf dist/; npx parcel build src/dBin_frontend/src/index.html",
         "prebuild": "npm run generate",
-        "dev": "npx parcel serve src/dBin_frontend/src/index.html",
-        "predev": "dfx start --background --clean; npm run build; dfx deploy; node setupEnv.js; npm run generate;",
+        "dev": "NODE_ENV=development; rimraf dist/; NODE_ENV=development node build.mjs",
+        "predev": "dfx start --background --clean; npm run build; dfx deploy dBin_frontend; node setupEnv.js; npm run generate;",
         "postdev": "dfx stop",
         "generate": "dfx generate"
     },
     "dependencies": {
+        "@parcel/config-default": "^2.8.0",
+        "@parcel/core": "^2.8.0",
+        "dotenv": "^16.0.3",
         "inferno": "^8.0.4",
         "node-gyp-build": "^4.5.0",
         "web3.storage": "^4.4.0"

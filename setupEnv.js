@@ -22,9 +22,10 @@ function initCanisterEnv() {
         process.env.DFX_NETWORK ||
         (process.env.NODE_ENV === "production" ? "ic" : "local");
 
-    const canisterConfig = network === "local" ? localCanisters : prodCanisters;
+    const canistersConfig =
+        network === "local" ? localCanisters : prodCanisters;
 
-    const localMap = localCanisters
+    const canisterMap = canistersConfig
         ? Object.entries(localCanisters).reduce((prev, current) => {
               const [canisterName, canisterDetails] = current;
               prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
@@ -32,36 +33,21 @@ function initCanisterEnv() {
               return prev;
           }, {})
         : undefined;
-    const prodMap = prodCanisters
-        ? Object.entries(prodCanisters).reduce((prev, current) => {
-              const [canisterName, canisterDetails] = current;
-              prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
-                  canisterDetails[network];
-              return prev;
-          }, {})
-        : undefined;
-    return [localMap, prodMap];
-}
-const [localCanisters, prodCanisters] = initCanisterEnv();
 
-if (localCanisters) {
-    const localTemplate = Object.entries(localCanisters).reduce(
-        (start, next) => {
-            const [key, val] = next;
-            if (!start) return `${key}=${val}`;
-            return `${start ?? ""}
-          ${key}=${val}`;
-        },
-        ``
-    );
-    fs.writeFileSync(".env.development", localTemplate);
+    canisterMap["NODE_ENV"] =
+        process.env.NODE_ENV ||
+        (network === "ic" ? "production" : "development");
+
+    return canisterMap;
 }
-if (prodCanisters) {
-    const prodTemplate = Object.entries(prodCanisters).reduce((start, next) => {
+const canisters = initCanisterEnv();
+
+if (canisters) {
+    const template = Object.entries(canisters).reduce((start, next) => {
         const [key, val] = next;
-        if (!start) return `${key}=${val}`;
-        return `${start ?? ""}
-        ${key}=${val}`;
-    }, ``);
-    fs.writeFileSync(".env", localTemplate);
+        console.log(`${key} ${val}`);
+        return `${start ?? ""} \n${key}=${val}`;
+    });
+
+    fs.writeFileSync(".env", template);
 }
