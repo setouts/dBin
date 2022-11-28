@@ -14,10 +14,10 @@ Parcel build watch script with a post-build step that syncs dist/ with the asset
 
 Requires icx-asset(https://crates.io/crates/icx-asset) in $PATH.
 
-Requires a exported identity IDENTITY_FILE, which must also be the identity that ran the asset file.
+Requires a exported identity IDENTITY_FILE, which must also be the identity that started the asset canister.
 This identity must have no password.
 
-Requires FRONTEND_ASSET_CANISTER_ID to be a canister ID, that's read from a .env file.
+Requires FRONTEND_ASSET_CANISTER_ID to be a canister ID that's read from a .env file.
 
 */
 
