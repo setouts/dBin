@@ -27,6 +27,20 @@ body {
     height: 50px;
 }
 
+.shown {
+    display: inline !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#login_button {
+    width: 50px;
+    height: 50px;
+    margin-left: 50px;
+}
+
 #nav {
     background-color: rgb(26, 26, 37);
     height: 3em;

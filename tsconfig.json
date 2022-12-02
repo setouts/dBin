@@ -7,10 +7,8 @@
         "strict": true,
         "outDir": "build",
         "inlineSourceMap": true,
-        "jsx": "preserve",
-        "jsxFactory": "h",
+        "jsx": "react-jsx",
         "rootDir": "src",
-        "baseUrl": ".",
         "isolatedModules": true,
         "target": "ES6",
         "moduleResolution": "node",
@@ -20,6 +18,6 @@
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true
     },
-    "include": ["src/dBin_frontend/src/**/*"],
+    "include": ["src/dBin_frontend/src/**/*", "src/declarations/dBin_backend"],
     "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }

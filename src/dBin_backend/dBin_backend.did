@@ -1,5 +1,31 @@
+type NoteContents = text;
+type NoteID = nat32;
+
+type AccessType = variant {
+    Public;
+    Invite;
+    Private;
+};
+
+type NoteMetadata = record {
+    creator: principal;
+    note_id: nat32;
+    access: AccessType;
+    creation_date: nat64;
+    last_modified_date: nat64;
+};
+
+type FullNote = record {
+    metadata: NoteMetadata;
+    contents: NoteContents;
+};
+
+type PartialNote = record {
+    metadata: NoteMetadata;
+    contents: NoteContents;
+};
+
 service : {
-    "Greet": (text) -> (text) query;
-    "UpdateGlobalGreeting": (text) -> ();
-    "UpdatePrivateGreeting": (text) -> ();
+    "GetFullContents": (NoteID) -> (opt FullNote) query;
+    "SaveFullContents": (NoteContents) -> ();
 }

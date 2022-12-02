@@ -1,31 +1,52 @@
-import { Component, Fragment, Inferno, render } from "inferno";
-import { Web3Storage } from "web3.storage";
-import { h } from "inferno-hyperscript";
-import { initDevTools } from "inferno-devtools";
 import { Nav } from "./Nav";
 import { MainTextArea } from "./MainTextArea";
-import config from "../assets/config.json";
+import React, { Component } from "react";
+import { createRoot } from "react-dom/client";
+import assert from "assert";
+import { AuthClient } from "@dfinity/auth-client";
+import { Identity } from "@dfinity/agent";
+import { Int } from "@dfinity/candid/lib/cjs/idl";
 
-export const storageClient = new Web3Storage({
-    token: config.Web3StorageAPIKey,
-});
+//TODO: Keep it simple, stupid.
 
-export const backendURL =
-    "http://127.0.0.1:4943/api/v2/canister/ryjl3-tyaaa-aaaaa-aaaba-cai&id=rrkah-fqaaa-aaaaa-aaaaq-cai";
+interface MainCompProps {
+    authClient?: AuthClient;
+}
 
-class MyComp extends Component {
-    public constructor() {
-        super();
+class MainComp extends Component<MainCompProps> {
+    public constructor(props: MainCompProps) {
+        super(props);
     }
 
     public render() {
-        return [
-            <Nav key="1" />,
-            <MainTextArea key="2" value="" readonly={false} />,
-        ];
+        return (
+            <React.StrictMode>
+                <Nav authClient={this.props.authClient} />
+                <MainTextArea
+                    authClient={this.props.authClient}
+                    value=""
+                    readonly={false}
+                />
+                ,
+            </React.StrictMode>
+        );
+        // return [
+        //     //<Nav key="1" />,
+        //     <MainTextArea key="2" value="" readonly={false} />,
+        // ];
     }
 }
 
 // initDevTools();
 
-render(<MyComp />, document.getElementById("app"));
+async function main() {
+    const container = document.getElementById("app");
+    assert(container);
+
+    const client = await AuthClient.create();
+
+    const root = createRoot(container);
+    root.render(<MainComp authClient={client} />);
+}
+
+main();

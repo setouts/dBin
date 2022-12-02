@@ -5,7 +5,7 @@ module.exports = {
     },
     extends: [
         "eslint:recommended",
-        "plugin:inferno/recommended",
+        "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
     ],
     overrides: [],
@@ -14,6 +14,6 @@ module.exports = {
         ecmaVersion: "latest",
         sourceType: "module",
     },
-    plugins: ["inferno", "@typescript-eslint", "only-warn"],
-    rules: {},
+    plugins: ["react", "@typescript-eslint", "only-warn"],
+    rules: { "react/react-in-jsx-scope": "off" },
 };

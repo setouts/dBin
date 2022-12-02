@@ -1,6 +1,6 @@
 import { Parcel } from "@parcel/core";
 
-import { exec } from "child_process";
+import { execSync } from "child_process";
 import * as dotenv from "dotenv";
 
 const REPLICA_URL = "http://127.0.0.1:4943";
@@ -14,16 +14,21 @@ Parcel build watch script with a post-build step that syncs dist/ with the asset
 
 Requires icx-asset(https://crates.io/crates/icx-asset) in $PATH.
 
-Requires a exported identity IDENTITY_FILE, which must also be the identity that started the asset canister.
+Requires a exported identity in a IDENTITY_FILE, which must also be the identity that started the asset canister.
 This identity must have no password.
 
-Requires FRONTEND_ASSET_CANISTER_ID to be a canister ID that's read from a .env file.
+Requires FRONTEND_ASSET_CANISTER_ID to be a canister ID that's loaded from a .env file.
 
 */
 
-//TODO: maybe I can just get HMR to work and this isn't needed?
+//TODO: TODO: TODO: GET HMR WORKING
+//TODO: Make this generate a .proxyrc file that corresponds to the canister backend URL for development. AND FINALLY GET HMR WORKING :))))))))
+// In fact, perhaps I should just consolidate that into setupEnv?
+//TODO: Fix error handling
 
 dotenv.config();
+
+const ICON = "‽";
 
 const bundler = new Parcel({
     entries: "src/dBin_frontend/src/index.html",
@@ -31,31 +36,36 @@ const bundler = new Parcel({
 });
 
 function logError(err) {
-    console.log(`📦 ❌  ${err}`);
+    if ((err && err, toString)) {
+        console.log(`${ICON} ✖️  ${err.toString()}`);
+    }
 }
 
-logError(process.env);
 
-Object.entries(process.env).forEach(logError);
+
 
 const sub = await bundler
-    .watch(async (err, event) => {
+    .watch((err, event) => {
         if (err) {
             throw err;
         }
 
         if (event.type === "buildSuccess") {
-            console.log(`📦  Built asset bundle in ${event.buildTime / 1000}s`);
+            console.log(
+                `${ICON}  Built asset bundle in ${event.buildTime / 1000}s`
+            );
+
+            //TODO: Might need to add rate-limiting?
+            const currentTime = performance.now();
+            execSync(
+                `icx-asset --replica ${REPLICA_URL} --pem ${IDENTITY_FILE} sync ${process.env[FRONTEND_ASSET_CANISTER_ID]} ${DISTDIR}`
+            );
 
             console.log(
-                `icx-asset --replica ${REPLICA_URL} --pem ${IDENTITY_FILE} sync ${process.env[FRONTEND_ASSET_CANISTER_ID]} ${DISTDIR}`
+                `${ICON}  Replaced asset bundle in canister in ${
+                    (performance.now() - currentTime) / 1000
+                }s`
             );
-
-            const { out, err } = await exec(
-                `icx-asset --replica ${REPLICA_URL} --pem ${IDENTITY_FILE} sync ${process.env[FRONTEND_ASSET_CANISTER_ID]} ${DISTDIR}`
-            );
-
-            console.log(`${out} ${err}`);
         } else if (event.type === "buildFailure") {
             logError(event.diagnostics);
             // throw new Error(`${event.diagnostics}`);

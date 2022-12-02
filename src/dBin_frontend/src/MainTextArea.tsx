@@ -1,10 +1,10 @@
-import { ChangeEvent, Component, FormEvent, Inferno } from "inferno";
-import { h } from "inferno-hyperscript";
-import { storageClient } from "./Main";
+import { AuthClient } from "@dfinity/auth-client";
+import { Component, FormEvent } from "react";
 
 interface TextAreaProps {
     value: string;
     readonly: boolean;
+    authClient?: AuthClient;
 }
 
 interface TextAreaState {
@@ -12,13 +12,8 @@ interface TextAreaState {
     readonly: boolean;
 }
 
-//TODO: Add streaming support for files. Seems unnecessary for simple text rn.
-//TODO: Ponder timing attacks with CID getting/creation.
-//TODO: Think about private IPFS swarms? Gateways? Since it seems content is immutable, and only deletable if nothing subscribes to it.
 //TODO: Quantum computing or algo vulnerabilities could break or have already broken current encryption algorithms. Think about this more.
-
-const CurrentThoughtsCID =
-    "bafybeigso5vphlutf3h7mpxn5fzuj6z3jpokv37xdj2nmyl4tyxqptwl2e";
+//TODO: Live Editing
 
 export class MainTextArea extends Component<TextAreaProps, TextAreaState> {
     public constructor(props: TextAreaProps) {
@@ -33,25 +28,11 @@ export class MainTextArea extends Component<TextAreaProps, TextAreaState> {
     //     return true;
     // }
 
-    public async componentDidMount() {
-        const response = await storageClient.get(CurrentThoughtsCID);
-
-        console.log(await storageClient.status(CurrentThoughtsCID));
-
-        if (response) {
-            const underlying_files = await response.files();
-            console.log("bruh");
-
-            if (underlying_files.length > 0) {
-                //this.setState({ value: await underlying_files[0].text() });
-                this.setState({ value: "tedddsdt" });
-            }
-        }
-    }
+    public async componentDidMount() {}
 
     //TODO: Figure out if this is the best way to do this. Seems slow? as it forces a state merge.
+    //TODO: Use a ref for this.
     public onInput(event: FormEvent<HTMLTextAreaElement>) {
-        console.log("this werk?");
         this.setState({
             value: event.currentTarget.value,
         });

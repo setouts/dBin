@@ -1,32 +1,45 @@
-import { Component } from "inferno";
-import { h } from "inferno-hyperscript";
+import { HttpAgent } from "@dfinity/agent";
+import { AuthClient } from "@dfinity/auth-client";
+import { Component } from "react";
+import { createActor, idlFactory } from "../../declarations/dBin_backend";
+import { LoginButton } from "./LoginButton";
 
-import { backendURL, storageClient } from "./Main";
+const agent = new HttpAgent();
+
+const actor = createActor("rrkah-fqaaa-aaaaa-aaaaq-cai", {
+    agent: agent,
+});
 
 async function upload(pasteText: string) {
-    const response = await window.fetch(backendURL.concat("/pasd1te"), {
-        method: "post",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            contents: (
-                document.getElementById("typing_area") as HTMLTextAreaElement
-            ).value,
-        }),
-    });
+    const test = await actor.GetFullContents(32);
 
-    const newFile = new File([pasteText], "ThoughtsSoFar", {
-        type: "text/plain",
-    });
+    console.log(test);
 
-    const fileResponse = await storageClient.put([newFile]);
-    console.log(await storageClient.status(fileResponse));
+    // const response = await window.fetch(backendURL.concat("/pasd1te"), {
+    //     method: "post",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //         contents: (
+    //             document.getElementById("typing_area") as HTMLTextAreaElement
+    //         ).value,
+    //     }),
+    // });
+    // const newFile = new File([pasteText], "ThoughtsSoFar", {
+    //     type: "text/plain",
+    // });
+    // const fileResponse = await storageClient.put([newFile]);
+    // console.log(await storageClient.status(fileResponse));
 }
 
-export class Nav extends Component {
-    public constructor() {
-        super();
+interface NavProps {
+    authClient?: AuthClient;
+}
+
+export class Nav extends Component<NavProps> {
+    public constructor(props: NavProps) {
+        super(props);
     }
 
     public render() {
@@ -45,7 +58,10 @@ export class Nav extends Component {
                             ).value
                         );
                     }}
-                ></button>
+                >
+                    UPLOAD
+                </button>
+                <LoginButton authClient={this.props.authClient} />
             </div>
         );
     }
