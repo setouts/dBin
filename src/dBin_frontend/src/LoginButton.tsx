@@ -1,9 +1,13 @@
 import { AnonymousIdentity } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import { Component, ReactNode } from "react";
+import { AGENT } from "./Main";
 
+//TODO: Should clean this up, this is ugly.
 async function HandleAuthentication(client?: AuthClient) {
-    console.log(client?.getIdentity());
+    if (client) {
+        AGENT.replaceIdentity(await client.getIdentity());
+    }
 }
 
 async function InitializeIdentity() {
@@ -26,7 +30,6 @@ interface LoginButtonProps {
 }
 
 function isCurrentUserAuthenticated(authClient?: AuthClient) {
-    console
     return !authClient?.getIdentity().getPrincipal().isAnonymous();
 }
 
@@ -36,6 +39,9 @@ export class LoginButton extends Component<LoginButtonProps, unknown> {
     }
 
     async componentDidMount() {
+        if (isCurrentUserAuthenticated(this.props.authClient)) {
+            await HandleAuthentication(this.props.authClient);
+        }
         // if (this.props.authClient?.isAuthenticated()) {
         //     await HandleAuthentication(this.props.authClient);
         // } else {
@@ -50,6 +56,10 @@ export class LoginButton extends Component<LoginButtonProps, unknown> {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 await HandleAuthentication(this.props.authClient!);
             },
+            identityProvider:
+                process.env.NODE_ENV === "production"
+                    ? "https://identity.ic0.app/#authorize"
+                    : `http://127.0.0.1:4943/?canisterId=${process.env.IDENTITY_CANISTER_ID}`,
         });
     }
 

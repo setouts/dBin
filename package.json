@@ -6,7 +6,6 @@
         "prebuild": "npm run generate",
         "dev": "rimraf dist/; parcel serve src/dBin_frontend/src/index.html",
         "predev": "dfx start --background --clean; npm run build; dfx deploy dBin_frontend; node setupEnv.mjs; npm run generate;",
-        "postdev": "dfx stop",
         "generate": "dfx generate"
     },
     "dependencies": {

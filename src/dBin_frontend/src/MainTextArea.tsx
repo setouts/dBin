@@ -1,5 +1,6 @@
 import { AuthClient } from "@dfinity/auth-client";
 import { Component, FormEvent } from "react";
+import { ACTOR } from "./Main";
 
 interface TextAreaProps {
     value: string;
@@ -12,7 +13,6 @@ interface TextAreaState {
     readonly: boolean;
 }
 
-//TODO: Quantum computing or algo vulnerabilities could break or have already broken current encryption algorithms. Think about this more.
 //TODO: Live Editing
 
 export class MainTextArea extends Component<TextAreaProps, TextAreaState> {
@@ -28,7 +28,13 @@ export class MainTextArea extends Component<TextAreaProps, TextAreaState> {
     //     return true;
     // }
 
-    public async componentDidMount() {}
+    public async componentDidMount() {
+        const storedNote = await ACTOR.GetFullContents(42);
+        console.log(storedNote);
+        if (storedNote && storedNote.length > 0) {
+            this.setState({ value: storedNote[0]!.contents });
+        }
+    }
 
     //TODO: Figure out if this is the best way to do this. Seems slow? as it forces a state merge.
     //TODO: Use a ref for this.

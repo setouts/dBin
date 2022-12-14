@@ -1,18 +1,14 @@
+#![feature(local_key_cell_methods)]
 #![allow(non_snake_case)]
 
-use std::cell::RefCell;
+use std::{cell::RefCell, fmt};
 
 use candid::{CandidType, Deserialize, Principal};
+use ic_cdk::api::{call::RejectionCode, print};
+use ic_cdk::storage;
 use ic_cdk_macros::{init, post_upgrade, pre_upgrade, query, update};
 
 use std::collections::HashMap;
-
-thread_local! {
-    // static GLOBAL_GREETING: RefCell<String>  = RefCell::new( String::from("test"));
-    // static PRIVATE_GREETINGS: RefCell<HashMap<Principal,String>> = RefCell::default();
-
-
-}
 
 /*
 
@@ -62,73 +58,111 @@ struct FullNote {
     contents: String,
 }
 
-#[init]
-fn init() {
-    ic_cdk::api::print("hi");
+//TODO: Just save to stable storage instantly?
+thread_local! {
+    // static GLOBAL_GREETING: RefCell<String>  = RefCell::new( String::from("test"));
+    // static PRIVATE_GREETINGS: RefCell<HashMap<Principal,String>> = RefCell::default();
+
+    //TODO: Would have to keep these in sync. Seems inefficent.
+    static GLOBAL_NOTE_STORAGE: RefCell<HashMap<NoteID,FullNote>> = RefCell::default();
+    static USER_NOTE_STORAGE: RefCell<HashMap<Principal,NoteID>> = RefCell::default();
+
 }
+
+#[init]
+async fn init() {
+    ic_cdk::api::print("hi");
+
+    let seed_bytes_call = ic_cdk::api::management_canister::main::raw_rand().await;
+
+    match seed_bytes_call {
+        Ok((bytes,)) => {
+            // let mut seed_bytes = [0u8;32];
+            // seed_bytes.copy_from_slice(&bytes);
+            //seed_bytes
+        }
+        Err((err_code, err_string)) => {
+            print(err_string);
+        }
+    }
+}
+
+const MAX_IDENTIFIER_LENGTH: usize = 10;
+
+// I could just use consecutive numbers instead, but yolo.
+fn generate_identifier() -> String {
+    "yes".into()
+}
+
+// fn generate_identifier() -> String {
+//     rand::distributions::Alphanumeric.sample_string(
+//         &mut rand::thread_rng(),
+//         rand::thread_rng().gen_range(1..MAX_IDENTIFIER_LENGTH),
+//     )
+// }
 
 #[query(name = "GetFullContents")]
 fn get_full_contents(note_id: NoteID) -> Option<FullNote> {
     let caller = ic_cdk::caller();
-    let time = ic_cdk::api::time();
-    Some(FullNote {
-        metadata: NoteMetadata {
-            creator: caller,
-            creation_date: time,
-            note_id: note_id,
-            last_modified_date: time,
-            access: AccessType::Public,
-        },
-        contents: "yesssirrskiiiiii".into(),
-    })
+
+    //TODO: Add better error handling here.
+    let foundNote = GLOBAL_NOTE_STORAGE
+        .with(|global_note_storage| Some(global_note_storage.borrow().get(&note_id)?.clone()));
+    if let Some(mut note) = foundNote {
+        // note.contents = generaIte_identifier();
+        Some(note)
+    } else {
+        None
+    }
 }
 
+//TODO: Progressively generate note IDs. Should probably change it to a string and use a random identifier.
 #[update(name = "SaveFullContents")]
-fn save_full_contents(noteId: String, contents: String) {}
+fn save_full_contents(contents: String) {
+    let caller = ic_cdk::caller();
+    let time = ic_cdk::api::time();
+    let noteId = 42;
+
+    GLOBAL_NOTE_STORAGE.with(|storage| {
+        storage.borrow_mut().insert(
+            noteId,
+            FullNote {
+                metadata: NoteMetadata {
+                    access: AccessType::Public,
+                    creator: caller,
+                    creation_date: time,
+                    note_id: noteId,
+                    last_modified_date: time,
+                },
+                contents: contents,
+            },
+        );
+    });
+}
 
 #[pre_upgrade]
 fn pre_upgrade() {
-    //TODO: Add saving to stable memory here.
+    let clone_hashmap = GLOBAL_NOTE_STORAGE.with(|storage| storage.borrow_mut().clone());
+
+    //TODO: Add error handling
+    let res = storage::stable_save((clone_hashmap,));
+
+    if let Err(e) = res {
+        ic_cdk::api::print(e.to_string());
+    }
+
+    return;
 }
 
 #[post_upgrade]
 fn post_upgrade() {
-    //TODO: Add loading from stable memory here.
+    let res: Result<(HashMap<NoteID, FullNote>,), String> = storage::stable_restore();
+
+    if let Ok((stored_notes,)) = res {
+        GLOBAL_NOTE_STORAGE.replace(stored_notes);
+    } else if let Err(e) = res {
+        ic_cdk::api::print(e);
+    }
+
+    return;
 }
-
-// #[query(name = "Greet")]
-// fn greet(name: String) -> String {
-//     let mut personal_greeting: Option<String> = None;
-//     let mut global_greeting: String = String::new();
-//     let princip_id = ic_cdk::caller();
-
-//     "Yes".into()
-
-//     // //TODO: No way this is the best pattern to do this? Do better
-//     // GLOBAL_GREETING.with(|greeting| {
-//     //     global_greeting = greeting.borrow().clone();
-//     // });
-
-//     // PRIVATE_GREETINGS.with(|greeting| {
-//     //     if let Some(greeting) = greeting.borrow().get(&princip_id) {
-//     //         personal_greeting = Some(greeting.clone());
-//     //     }
-//     // });
-
-//     // format!(
-//     //     "Hello {princip_id}, your personal greeting is {}, the global greeting is {global_greeting}",
-//     //    (if personal_greeting.is_some() {personal_greeting} else {Some(String::from("Unset"))}.unwrap())
-//     // )
-// }
-
-// // #[update(name = "UpdateGlobalGreeting")]
-// // fn update_global_greeting(new_greeting: String) {
-// //     GLOBAL_GREETING.with(|greeting| {
-// //         *greeting.borrow_mut() = new_greeting;
-// //     });
-// // }
-
-// // #[update(name = "UpdatePrivateGreeting")]
-// // fn update_principal_greeting(new_greeting: String) {
-// //     PRIVATE_GREETINGS.with(|greeting| greeting.borrow_mut().insert(ic_cdk::caller(), new_greeting));
-// // }

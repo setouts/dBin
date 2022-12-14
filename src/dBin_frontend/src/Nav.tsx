@@ -3,17 +3,10 @@ import { AuthClient } from "@dfinity/auth-client";
 import { Component } from "react";
 import { createActor, idlFactory } from "../../declarations/dBin_backend";
 import { LoginButton } from "./LoginButton";
-
-const agent = new HttpAgent();
-
-const actor = createActor("rrkah-fqaaa-aaaaa-aaaaq-cai", {
-    agent: agent,
-});
+import { ACTOR } from "./Main";
 
 async function upload(pasteText: string) {
-    const test = await actor.GetFullContents(32);
-
-    console.log(test);
+    const test = await ACTOR.SaveFullContents(pasteText);
 
     // const response = await window.fetch(backendURL.concat("/pasd1te"), {
     //     method: "post",

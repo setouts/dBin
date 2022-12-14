@@ -4,14 +4,23 @@ import React, { Component } from "react";
 import { createRoot } from "react-dom/client";
 import assert from "assert";
 import { AuthClient } from "@dfinity/auth-client";
-import { Identity } from "@dfinity/agent";
+import { HttpAgent, Identity } from "@dfinity/agent";
 import { Int } from "@dfinity/candid/lib/cjs/idl";
+import { createActor } from "../../declarations/dBin_backend";
 
 //TODO: Keep it simple, stupid.
+//TODO: Add Unit tests
 
 interface MainCompProps {
     authClient?: AuthClient;
 }
+
+//TODO: Refactor this.
+export const AGENT = new HttpAgent({ host: "http://127.0.0.1:4943/" });
+
+export const ACTOR = createActor("rrkah-fqaaa-aaaaa-aaaaq-cai", {
+    agent: AGENT,
+});
 
 class MainComp extends Component<MainCompProps> {
     public constructor(props: MainCompProps) {

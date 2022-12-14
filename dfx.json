@@ -5,8 +5,14 @@
             "package": "dBin_backend",
             "type": "rust"
         },
+        "identity": {
+            "type": "custom",
+            "wasm": "local_internet_identity/internet_identity_dev.wasm",
+            "candid": "local_internet_identity/internet_identity.did",
+            "build": ""
+        },
         "dBin_frontend": {
-            "dependencies": ["dBin_backend"],
+            "dependencies": ["dBin_backend", "identity"],
             "frontend": {
                 "entrypoint": "src/dBin_frontend/src/index.html"
             },
